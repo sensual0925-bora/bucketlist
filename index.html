@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>우리들의 버킷리스트</title>
-<meta name="description" content="친구들과 함께 쓰는 버킷리스트">
+<meta name="description" content="친구들과 함께 쓰는 버킷리스트 일기장">
 <meta name="theme-color" content="#D9573B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -16,158 +16,197 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nanum+Pen+Script&display=swap">
 <style>
 :root{
   color-scheme:light dark;
-  --bg:#FBF6F1; --surface:#FFFFFF; --surface-2:#F3EAE2; --ink:#2A1F1A; --ink-2:#6B5A51; --ink-3:#9A8A81;
-  --rule:#EADFD6; --rule-strong:#D5C6BA;
+  --paper:#FFFDF6; --paper-line:#E4ECF4; --card:#FFFFFF; --surface-2:#F5EFE4;
+  --ink:#3A2E28; --ink-2:#6E5F55; --ink-3:#A0918A;
+  --rule:#EDE3D6; --rule-strong:#D9CBBB;
   --accent:#D9573B; --accent-ink:#FFFFFF; --accent-soft:#FBE3DA;
-  --done:#2F7D5B; --done-soft:#DDEFE5; --crit:#B3382A;
+  --done:#2F7D5B; --done-soft:#DDEFE5; --crit:#B3382A; --stamp:#D23A2A;
+  --hl:#FFE98A;
+  --p0:#FFDCDC; --p1:#FFE6C9; --p2:#FFF3B8; --p3:#DAF2CF; --p4:#CFEDF3; --p5:#D7E1FF; --p6:#E6D9FF; --p7:#FFD9EC;
   --scrim:rgba(30,15,8,.42); --shadow:0 -10px 40px rgba(60,30,15,.18);
-  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --card-shadow:0 1px 2px rgba(80,50,30,.08),0 4px 14px rgba(80,50,30,.08);
+  --hand:"Gaegu","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --pen:"Nanum Pen Script","Gaegu",cursive;
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --bg:#16110F; --surface:#211A17; --surface-2:#2C2320; --ink:#F2E9E4; --ink-2:#BCAAA0; --ink-3:#8C7B72;
-    --rule:#352B27; --rule-strong:#4A3D37;
+    --paper:#1B1815; --paper-line:#26231F; --card:#24201C; --surface-2:#2E2924;
+    --ink:#F0E8DC; --ink-2:#C2B4A5; --ink-3:#8E8073;
+    --rule:#36302A; --rule-strong:#4A423A;
     --accent:#F08A6E; --accent-ink:#2A0F06; --accent-soft:#45251C;
-    --done:#6FCB9F; --done-soft:#1C3A2C; --crit:#EE8474;
+    --done:#6FCB9F; --done-soft:#1C3A2C; --crit:#EE8474; --stamp:#F0705E;
+    --hl:#6B5A1E;
+    --p0:#5A3434; --p1:#5A4430; --p2:#57502C; --p3:#355233; --p4:#2E4D54; --p5:#343F63; --p6:#45385F; --p7:#583248;
     --scrim:rgba(0,0,0,.6); --shadow:0 -10px 40px rgba(0,0,0,.5);
+    --card-shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.3);
   }
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{margin:0;color:var(--ink);font-family:var(--hand);font-size:18px;line-height:1.5;letter-spacing:-.04em;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  background-color:var(--paper);
+  background-image:repeating-linear-gradient(to bottom,transparent 0 33px,var(--paper-line) 33px 34px)}
 button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 button:disabled{cursor:not-allowed;opacity:.5}
 [hidden]{display:none!important}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 a{color:var(--accent)}
-.wrap{max-width:640px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px));padding-top:calc(22px + env(safe-area-inset-top,0px));padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:640px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px));padding-top:calc(18px + env(safe-area-inset-top,0px));padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 
 /* 상단 */
 .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.02em}
-.hello{margin:4px 0 0;color:var(--ink-2);font-size:14px}
-.hello button{border:0;background:none;padding:0;color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:3px}
-.invite{flex:none;height:40px;padding:0 14px;border-radius:20px;border:1px solid var(--rule-strong);background:var(--surface);font-size:14px;font-weight:600}
+.today{margin:0;color:var(--ink-3);font-size:16px}
+h1{margin:0;font-family:var(--pen);font-weight:400;font-size:40px;line-height:1.15;letter-spacing:0}
+.hl{background:linear-gradient(transparent 58%,var(--hl) 58%,var(--hl) 92%,transparent 92%);padding:0 2px}
+.hello{margin:4px 0 0;color:var(--ink-2);font-size:17px}
+.hello button{border:0;background:none;padding:0;color:var(--accent);font-weight:700;text-decoration:underline wavy;text-underline-offset:4px;text-decoration-thickness:1px}
+.invite{flex:none;margin-top:6px;height:40px;padding:0 14px;border-radius:20px;border:1.5px dashed var(--rule-strong);background:var(--card);font-size:16px;font-weight:700}
 
-.progress{margin:18px 0 0;background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:14px 16px}
-.progress-line{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;color:var(--ink-2)}
-.progress-line b{font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
-.bar{margin-top:10px;height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
-.bar > i{display:block;height:100%;width:0;background:var(--done);border-radius:4px;transition:width .4s ease}
+.progress{margin:18px 0 0;background:var(--card);border-radius:4px;padding:12px 16px 14px;box-shadow:var(--card-shadow);position:relative}
+.progress-line{display:flex;justify-content:space-between;align-items:baseline;gap:8px;color:var(--ink-2)}
+.progress-line b{font-family:var(--pen);font-weight:400;font-size:30px;color:var(--ink);line-height:1}
+.bar{margin-top:8px;height:12px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.bar > i{display:block;height:100%;width:0;border-radius:6px;transition:width .4s ease;
+  background:repeating-linear-gradient(-45deg,var(--done) 0 8px,color-mix(in srgb,var(--done) 80%,#fff) 8px 16px)}
 
-/* 탭 */
-.tabs{display:flex;gap:6px;margin:18px 0 12px;overflow-x:auto;scrollbar-width:none}
+/* 탭: 일기장 인덱스 */
+.tabs{display:flex;gap:6px;margin:20px 0 14px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:none;height:38px;padding:0 14px;border-radius:19px;border:1px solid var(--rule);background:var(--surface);color:var(--ink-2);font-size:14px;font-weight:500}
-.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
-.tab .n{margin-left:4px;font-variant-numeric:tabular-nums;opacity:.75}
+.tab{flex:none;height:40px;padding:0 16px;border-radius:12px 12px 4px 4px;border:0;background:var(--surface-2);color:var(--ink-2);font-size:17px;font-weight:700}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+.tab .n{margin-left:4px;opacity:.8}
 
-/* 목록 */
-.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.card{display:flex;align-items:flex-start;gap:4px;background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:6px 10px 6px 4px}
-.check{flex:none;width:44px;height:44px;display:grid;place-items:center;border:0;background:none;padding:0}
-.check i{width:26px;height:26px;border-radius:50%;border:2px solid var(--rule-strong);display:grid;place-items:center;transition:background .15s,border-color .15s}
-.check svg{width:16px;height:16px;opacity:0}
-.card.done .check i{background:var(--done);border-color:var(--done)}
-.card.done .check svg{opacity:1;color:var(--surface)}
-.card-main{flex:1;min-width:0;border:0;background:none;padding:10px 4px 8px;text-align:left;display:block}
+/* 목록: 일기장 한 칸 */
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+.card{position:relative;display:flex;align-items:center;gap:10px;background:var(--card);border-radius:4px;padding:16px 8px 14px 14px;box-shadow:var(--card-shadow);transform:rotate(var(--tilt,0deg))}
+.tape{position:absolute;top:-9px;left:50%;width:74px;height:20px;transform:translateX(-50%) rotate(var(--tape,-3deg));background:var(--tc,var(--p2));opacity:.85;border-left:2px dotted rgba(255,255,255,.6);border-right:2px dotted rgba(255,255,255,.6)}
+.sticker{flex:none;width:64px;height:64px;display:grid;place-items:center;border:3px solid #fff;border-radius:16px;background:var(--sc,var(--p2));font-size:34px;line-height:1;box-shadow:0 2px 6px rgba(80,50,30,.18);transform:rotate(var(--stilt,-4deg));padding:0}
+@media (prefers-color-scheme: dark){ .sticker{border-color:#3A332C} }
+.polaroid-mini{flex:none;width:68px;padding:4px 4px 12px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2);transform:rotate(var(--stilt,-4deg));border:0;position:relative}
+.polaroid-mini img{display:block;width:60px;height:60px;object-fit:cover;background:#eee}
+.polaroid-mini .em{position:absolute;right:-8px;bottom:-6px;font-size:22px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
+.card-main{flex:1;min-width:0;border:0;background:none;padding:2px 2px;text-align:left;display:block}
 .card-main > span{display:block}
-.c-title{font-size:16px;font-weight:600;word-break:break-word}
-.card.done .c-title{color:var(--ink-2)}
-.c-note{margin-top:2px;color:var(--ink-2);font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
-.c-meta{margin-top:6px;display:flex!important;flex-wrap:wrap;gap:4px 10px;color:var(--ink-3);font-size:13px}
-.c-done{color:var(--done);font-weight:600}
-.thumb{flex:none;width:64px;height:64px;margin:8px 0 8px 4px;border-radius:10px;object-fit:cover;background:var(--surface-2)}
-.restore{flex:none;align-self:center;height:36px;padding:0 12px;border-radius:18px;border:1px solid var(--rule-strong);background:var(--surface);font-size:13px;font-weight:600}
-.card.trash{padding-left:14px}
+.c-title{font-size:21px;font-weight:700;line-height:1.3;word-break:break-word}
+.card.done .c-title{text-decoration:line-through;text-decoration-color:var(--stamp);text-decoration-thickness:2px;color:var(--ink-2)}
+.c-note{margin-top:2px;color:var(--ink-2);font-size:17px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.c-meta{margin-top:4px;display:flex!important;flex-wrap:wrap;gap:2px 10px;color:var(--ink-3);font-size:16px}
+.c-done{color:var(--done);font-weight:700}
+.check{flex:none;width:44px;height:44px;display:grid;place-items:center;border:0;background:none;padding:0;align-self:center}
+.check i{width:28px;height:28px;border:2.5px solid var(--ink-2);border-radius:6px 8px 5px 7px;display:grid;place-items:center;transform:rotate(-3deg);color:var(--stamp)}
+.check svg{width:30px;height:30px;opacity:0;margin:-6px -4px 0 0}
+.card.done .check svg{opacity:1}
+.stamp{position:absolute;top:6px;right:52px;transform:rotate(-14deg);border:2.5px solid var(--stamp);color:var(--stamp);border-radius:50%;width:58px;height:58px;display:grid;place-items:center;font-family:var(--pen);font-size:22px;line-height:1;opacity:.7;pointer-events:none}
+.restore{flex:none;align-self:center;height:38px;padding:0 12px;border-radius:19px;border:1.5px solid var(--rule-strong);background:var(--card);font-size:16px;font-weight:700}
 
-.empty{text-align:center;color:var(--ink-3);padding:48px 16px;font-size:15px}
-.empty b{display:block;font-size:34px;margin-bottom:6px}
-.err{background:var(--accent-soft);color:var(--ink);border-radius:12px;padding:14px 16px;font-size:14px}
+.empty{text-align:center;color:var(--ink-3);padding:48px 16px;font-size:18px;list-style:none}
+.empty b{display:block;font-size:40px;margin-bottom:6px}
+.err{background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:14px 16px}
 .err button{margin-top:8px}
 
 /* 추가 버튼 */
-.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));height:52px;padding:0 26px;border-radius:26px;border:0;background:var(--accent);color:var(--accent-ink);font-size:16px;font-weight:700;box-shadow:0 6px 20px rgba(217,87,59,.35);z-index:10}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));height:54px;padding:0 28px;border-radius:27px;border:0;background:var(--accent);color:var(--accent-ink);font-size:20px;font-weight:700;box-shadow:0 6px 20px rgba(217,87,59,.35);z-index:10}
 
 /* 공통 버튼 */
-.btn{height:44px;padding:0 18px;border-radius:12px;border:1px solid var(--rule-strong);background:var(--surface);font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn{height:44px;padding:0 18px;border-radius:12px;border:1.5px solid var(--rule-strong);background:var(--card);font-weight:700;font-size:17px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.btn.big{width:100%;height:52px;font-size:16px;border-radius:14px}
-.btn.small{height:36px;padding:0 12px;font-size:14px;border-radius:10px}
-.link{border:0;background:none;padding:4px 0;color:var(--ink-2);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.btn.big{width:100%;height:54px;font-size:20px;border-radius:14px}
+.btn.small{height:38px;padding:0 12px;font-size:16px;border-radius:10px}
+.link{border:0;background:none;padding:4px 0;color:var(--ink-2);font-size:16px;text-decoration:underline;text-underline-offset:3px}
 .link.danger{color:var(--crit)}
+.file-btn{cursor:pointer}
 
 /* 시트 */
 .scrim{position:fixed;inset:0;background:var(--scrim);z-index:20}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--surface);border-radius:18px 18px 0 0;max-height:92dvh;display:flex;flex-direction:column;box-shadow:var(--shadow);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;border-radius:18px 18px 0 0;max-height:92dvh;display:flex;flex-direction:column;box-shadow:var(--shadow);padding-bottom:env(safe-area-inset-bottom,0px);
+  background-color:var(--paper);background-image:repeating-linear-gradient(to bottom,transparent 0 33px,var(--paper-line) 33px 34px)}
 @media (min-width:700px){
   .sheet{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:540px;border-radius:16px;max-height:88vh}
 }
-.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 4px;flex:none}
-.sheet-head h2{margin:0;font-size:18px}
-.x{border:0;background:none;color:var(--ink-2);font-size:15px;height:40px;padding:0 4px}
-.sheet-body{overflow-y:auto;padding:8px 16px 20px;overscroll-behavior:contain}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 0;flex:none}
+.sheet-head h2{margin:0;font-family:var(--pen);font-weight:400;font-size:32px}
+.x{border:0;background:none;color:var(--ink-2);font-size:17px;height:40px;padding:0 4px}
+.sheet-body{overflow-y:auto;padding:8px 16px 24px;overscroll-behavior:contain}
 .field{display:block;margin:0 0 14px}
-.field > span{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
-.input{width:100%;border:1px solid var(--rule-strong);background:var(--bg);border-radius:12px;padding:12px 14px;font-size:16px}
-textarea.input{resize:vertical;min-height:84px}
-.hint{font-size:13px;color:var(--ink-3);margin:-6px 0 14px}
+.field > span{display:block;font-size:16px;font-weight:700;color:var(--ink-2);margin-bottom:4px}
+.input{width:100%;border:1.5px solid var(--rule-strong);background:var(--card);border-radius:10px;padding:10px 14px;font-size:18px}
+textarea.input{resize:vertical;min-height:84px;line-height:1.45}
+.hint{color:var(--ink-3);margin:0 0 14px;font-size:16px}
 @media (prefers-reduced-motion: no-preference){
   .sheet{animation:up .2s ease-out}
   @media (min-width:700px){ .sheet{animation:none} }
 }
 @keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
 
+/* 이모티콘 고르기 */
+.pick-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.pick-top .sticker{width:72px;height:72px;font-size:40px}
+.pick-top .hint{margin:0}
+.picker{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:16px}
+.picker button{aspect-ratio:1;border:0;border-radius:10px;background:transparent;font-size:24px;line-height:1;padding:0;display:grid;place-items:center}
+.picker button[aria-pressed="true"]{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
+@media (max-width:360px){ .picker{grid-template-columns:repeat(6,1fr)} }
+.cover-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.cover-row img{width:56px;height:56px;object-fit:cover;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);transform:rotate(3deg)}
+
 /* 상세 */
-#dInfo h2{margin:0;font-size:21px;line-height:1.35;word-break:break-word}
-.d-note{margin:8px 0 0;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
-.d-meta{margin:10px 0 0;color:var(--ink-3);font-size:13px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
-.d-meta .link{font-size:13px}
-.d-sec{margin-top:18px;padding-top:16px;border-top:1px solid var(--rule)}
-.d-sec h3{margin:0 0 10px;font-size:14px;color:var(--ink-2);font-weight:600}
+.hero{display:flex;justify-content:center;padding:20px 0 4px}
+.hero .sticker{width:110px;height:110px;font-size:62px;border-width:4px;border-radius:24px}
+.polaroid{margin:0 auto;width:min(78%,320px);background:#fff;padding:10px 10px 14px;box-shadow:0 3px 12px rgba(0,0,0,.18);transform:rotate(var(--stilt,-2deg));position:relative}
+.polaroid img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#eee}
+.polaroid figcaption{margin-top:8px;font-family:var(--pen);font-size:22px;color:#3A2E28;text-align:center;line-height:1.2;word-break:break-word}
+.polaroid .em{position:absolute;right:-12px;top:-14px;font-size:40px;line-height:1;transform:rotate(12deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.polaroid .tape{top:-10px}
+.hero-actions{display:flex;justify-content:center;gap:8px;margin:12px 0 0;flex-wrap:wrap}
+.d-date{margin:14px 0 0;color:var(--ink-3);font-size:16px}
+#dInfo h2{margin:0;font-family:var(--pen);font-weight:400;font-size:36px;line-height:1.15;word-break:break-word}
+.d-note{margin:6px 0 0;white-space:pre-wrap;word-break:break-word;font-size:19px;line-height:34px}
+.d-meta{margin:8px 0 0;color:var(--ink-3);font-size:16px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.d-sec{margin-top:18px;padding-top:14px;border-top:2px dashed var(--rule-strong)}
+.d-sec h3{margin:0 0 8px;font-size:18px;color:var(--ink-2);font-weight:700}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.chip{background:var(--surface-2);border-radius:14px;padding:4px 11px;font-size:14px}
-.chip.me{background:var(--accent-soft);color:var(--accent);font-weight:600}
-.muted{color:var(--ink-3);font-size:14px}
+.chip{background:var(--surface-2);border-radius:14px;padding:2px 12px;font-size:17px}
+.chip.me{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.muted{color:var(--ink-3)}
 .join-btn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
-.done-box{background:var(--done-soft);border-radius:14px;padding:14px}
+.done-box{background:color-mix(in srgb,var(--done-soft) 85%,transparent);border-radius:10px;padding:14px}
 .done-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
-.badge{background:var(--done);color:var(--surface);border-radius:8px;padding:3px 9px;font-size:13px;font-weight:700}
-.done-date{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink-2)}
-.done-date input{border:1px solid var(--rule-strong);background:var(--surface);border-radius:8px;padding:4px 8px;font-size:15px}
+.badge{border:2px solid var(--stamp);color:var(--stamp);border-radius:8px;padding:0 9px;font-weight:700;transform:rotate(-4deg)}
+.done-date{display:flex;align-items:center;gap:6px;color:var(--ink-2)}
+.done-date input{border:1.5px solid var(--rule-strong);background:var(--card);border-radius:8px;padding:2px 8px;font-size:16px}
 .done-head .link{margin-left:auto}
-.proof{display:block;width:100%;max-height:420px;object-fit:cover;border-radius:12px;margin-top:12px;background:var(--surface-2)}
-.photo-drop{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;height:96px;border:2px dashed var(--rule-strong);border-radius:12px;background:var(--surface);color:var(--ink-2);font-weight:600;cursor:pointer}
-.photo-row{margin-top:8px;display:flex;justify-content:flex-end}
-.file-btn{cursor:pointer}
-.review{margin:12px 0 0;white-space:pre-wrap;word-break:break-word}
+.done-box .polaroid{margin-top:20px}
+.photo-drop{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;height:96px;border:2px dashed var(--rule-strong);border-radius:12px;background:var(--card);color:var(--ink-2);font-weight:700;cursor:pointer}
+.photo-row{margin-top:12px;display:flex;justify-content:center}
+.review{margin:12px 0 0;white-space:pre-wrap;word-break:break-word;font-size:19px}
 .review-form{margin-top:12px}
 .row{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
 .cmts{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:12px}
-.cmt-top{display:flex;gap:8px;align-items:baseline;font-size:13px;color:var(--ink-3)}
-.cmt-top b{color:var(--ink);font-size:14px}
-.cmt-top .link{margin-left:auto;font-size:12px;padding:0}
-.cmt p{margin:2px 0 0;white-space:pre-wrap;word-break:break-word}
+.cmt-top{display:flex;gap:8px;align-items:baseline;font-size:15px;color:var(--ink-3)}
+.cmt-top b{color:var(--ink);font-size:17px}
+.cmt-top .link{margin-left:auto;font-size:14px;padding:0}
+.cmt p{margin:0;white-space:pre-wrap;word-break:break-word}
 .cmt-form{display:flex;gap:8px}
-.cmt-form .input{flex:1;min-width:0;padding:10px 12px}
-.trash-note{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.cmt-form .input{flex:1;min-width:0}
+.trash-note{background:var(--surface-2);border-radius:12px;padding:12px 14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
 
-.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:40;font-size:14px;max-width:calc(100% - 32px);text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:12px;z-index:40;font-size:17px;max-width:calc(100% - 32px);text-align:center}
 </style>
 </head>
 <body>
 <main class="wrap">
   <div class="top">
     <div>
-      <h1>우리들의 버킷리스트</h1>
+      <p class="today" id="today"></p>
+      <h1><span class="hl">우리들의 버킷리스트</span></h1>
       <p class="hello" id="hello"></p>
     </div>
-    <button class="invite" id="inviteBtn" type="button">친구 초대</button>
+    <button class="invite" id="inviteBtn" type="button">💌 친구 초대</button>
   </div>
 
   <div class="progress" id="progress" hidden>
@@ -185,7 +224,7 @@ textarea.input{resize:vertical;min-height:84px}
   <ul class="list" id="list"></ul>
 </main>
 
-<button class="fab" id="addBtn" type="button">＋ 버킷 추가</button>
+<button class="fab" id="addBtn" type="button">✏️ 버킷 쓰기</button>
 
 <div class="scrim" id="scrim" hidden></div>
 
@@ -193,7 +232,7 @@ textarea.input{resize:vertical;min-height:84px}
 <div class="sheet" id="nameSheet" role="dialog" aria-modal="true" aria-labelledby="nameTitle" hidden>
   <div class="sheet-head"><h2 id="nameTitle">이름을 알려주세요</h2><button class="x" type="button" data-close id="nameClose">닫기</button></div>
   <form class="sheet-body" id="nameForm">
-    <p class="hint" style="margin:0 0 14px">버킷을 추가하거나 댓글을 달 때 이 이름이 보여요. 이 기기에 기억해 둘게요.</p>
+    <p class="hint">버킷을 쓰거나 댓글을 달 때 이 이름이 보여요. 이 기기에 기억해 둘게요.</p>
     <label class="field"><span>이름 (친구들이 알아볼 수 있게)</span><input class="input" id="nameInput" maxlength="20" autocomplete="nickname" required></label>
     <button class="btn primary big" type="submit">시작하기</button>
   </form>
@@ -201,11 +240,17 @@ textarea.input{resize:vertical;min-height:84px}
 
 <!-- 추가 -->
 <div class="sheet" id="addSheet" role="dialog" aria-modal="true" aria-labelledby="addTitle" hidden>
-  <div class="sheet-head"><h2 id="addTitle">버킷 추가</h2><button class="x" type="button" data-close>닫기</button></div>
+  <div class="sheet-head"><h2 id="addTitle">새 버킷 쓰기</h2><button class="x" type="button" data-close>닫기</button></div>
   <form class="sheet-body" id="addForm">
-    <label class="field"><span>하고 싶은 일</span><input class="input" id="addTitleInput" maxlength="100" placeholder="예) 제주도 한 바퀴 자전거 여행" required></label>
+    <label class="field"><span>하고 싶은 일</span><input class="input" id="addTitleInput" name="title" maxlength="100" placeholder="예) 제주도 한 바퀴 자전거 여행" required autocomplete="off"></label>
     <label class="field"><span>설명 (선택)</span><textarea class="input" id="addNoteInput" maxlength="1000" placeholder="언제, 누구랑, 왜 하고 싶은지"></textarea></label>
-    <button class="btn primary big" type="submit">추가하기</button>
+    <div class="field"><span>스티커</span><div id="addPicker"></div></div>
+    <div class="field"><span>사진 붙이기 (선택)</span>
+      <div class="cover-row"><img id="addCoverPreview" alt="" hidden>
+        <label class="btn small file-btn"><span id="addCoverLabel">📷 사진 고르기</span><input type="file" accept="image/*" id="addCover" hidden></label>
+        <button class="link" type="button" id="addCoverClear" hidden>빼기</button></div>
+    </div>
+    <button class="btn primary big" type="submit">일기장에 붙이기</button>
   </form>
 </div>
 
@@ -213,6 +258,7 @@ textarea.input{resize:vertical;min-height:84px}
 <div class="sheet" id="detailSheet" role="dialog" aria-modal="true" aria-label="버킷 자세히" hidden>
   <div class="sheet-head"><span></span><button class="x" type="button" data-close>닫기</button></div>
   <div class="sheet-body" id="detailBody">
+    <section id="dHero"></section>
     <section id="dInfo"></section>
     <section class="d-sec" id="dJoin"></section>
     <section class="d-sec" id="dDone"></section>
@@ -238,14 +284,16 @@ textarea.input{resize:vertical;min-height:84px}
   const SUPABASE_URL = "https://pxbbwatboylajmxeqnqd.supabase.co";
   const SUPABASE_KEY = "sb_publishable_fiefZveGsfljQqJH5CJ5Pw_CgmKiaT2";
   const PHOTO_BUCKET = "bucket-photos";
-  const PHOTO_MAX = 1600;  // 인증 사진은 긴 변을 이 크기로 줄여서 올림 (무료 저장 용량 1GB 아끼기)
+  const PHOTO_MAX = 1600;  // 사진은 긴 변을 이 크기로 줄여서 올림 (무료 저장 용량 1GB 아끼기)
   const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const pad = n => String(n).padStart(2, "0");
   const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+  const WEEK = "일월화수목금토";
   const fmtDay = s => { if (!s) return ""; const [y, m, d] = s.slice(0, 10).split("-"); return `${y}.${m}.${d}`; };
+  const fmtDiary = iso => { const d = new Date(iso); return isNaN(d) ? "" : `${d.getFullYear()}. ${pad(d.getMonth()+1)}. ${pad(d.getDate())} (${WEEK[d.getDay()]})`; };
   const fmtShort = iso => { const d = new Date(iso); return isNaN(d) ? "" : `${d.getMonth()+1}월 ${d.getDate()}일`; };
   const fmtAgo = iso => {
     const d = new Date(iso), s = (Date.now() - d) / 1000;
@@ -261,11 +309,54 @@ textarea.input{resize:vertical;min-height:84px}
     get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
     set(k, v) { try { localStorage.setItem(k, v); } catch {} },
   };
-  const CHECK_SVG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
+  const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13c2 1.5 3.5 3.5 5 6 3-6 7-11 12-15"/></svg>';
 
   function toast(msg, ms = 2600) {
     const t = $("#toast"); t.textContent = msg; t.hidden = false;
     clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, ms);
+  }
+
+  /* ===== 일기장 꾸미기: 이모티콘 스티커 ===== */
+  // 제목에 들어 있는 낱말로 스티커를 골라 줌 (앞에 있는 줄이 먼저)
+  const EMOJI_RULES = `
+    오로라,별똥별,유성,은하수,밤하늘:🌌|불꽃놀이,불꽃:🎆|일출,해돋이:🌅|노을,일몰,석양:🌇|별자리,별 보:🌟
+    순례,산티아고,산책,걷기,걸어서,트레킹,둘레길,올레:🥾|등산,산행,정상,청계산,북한산,한라산,지리산,설악산,등반:⛰️
+    자전거,라이딩:🚲|캠핑,글램핑,텐트:🏕️|낚시:🎣|스키,보드타기:⛷️|서핑:🏄|스쿠버,다이빙,스노클:🤿|수영:🏊
+    마라톤,달리기,러닝,조깅:🏃|요가,필라테스:🧘|헬스,운동,근육,바디프로필:💪|스카이다이빙,패러글라이딩,번지:🪂|열기구:🎈
+    축구:⚽|야구:⚾|농구:🏀|골프:⛳|테니스:🎾|볼링:🎳|클라이밍:🧗|춤,댄스,발레:💃|노래방,노래,콘서트,공연,페스티벌:🎤
+    통기타,기타 배우,기타 치,우쿨렐레:🎸|피아노:🎹|그림,드로잉,수채화:🎨|사진,필름카메라:📷|영화:🎬|뮤지컬,연극:🎭|책,독서,소설:📚|일기,글쓰기,편지:💌
+    공부,시험,자격증:✏️|영어,외국어,일본어,중국어,스페인어:🗣️|졸업:🎓|게임:🎮|놀이공원,롤러코스터,에버랜드,롯데월드:🎢
+    사우나,찜질방,온천,스파:♨️|치맥,치킨:🍗|맥주,술자리,술 한잔,포차,칵테일:🍻|와인:🍷|커피,카페:☕|빵,베이커리:🥐|케이크,디저트:🍰
+    아이스크림:🍦|라면,국수,맛집,먹방:🍜|초밥,스시,오마카세:🍣|고기,바베큐,삼겹살:🥩|피자:🍕|요리,베이킹:🍳
+    피크닉,소풍:🧺|한강:🌉|제주,귤:🍊|바다,해변,바닷가:🌊|섬,몰디브,발리,하와이:🏝️|크루즈,유람선,요트:🛳️
+    벚꽃,꽃구경,꽃:🌸|단풍,가을:🍁|눈사람,크리스마스,겨울:⛄|숲,나무,캠프파이어:🌲|식물,화분,텃밭:🪴
+    강아지,댕댕:🐶|고양이,냥:🐱|동물원,동물:🐾|생일,파티:🎉|결혼,웨딩,프러포즈:💍|이사,집,인테리어:🏡
+    드라이브,자동차,운전,면허:🚗|기차,KTX,기차여행:🚆|우주,로켓:🚀|돈,저축,적금,부자:💰|다이어트,샐러드:🥗|봉사,기부:🤝
+    쇼핑:🛍️|뜨개,뜨개질:🧶|도자기,공방:🏺|가족,엄마,아빠,부모님:👨‍👩‍👧|친구,우정:👯|데이트,연애,사랑:💕
+    일본,도쿄,오사카,후쿠오카:🗾|파리,에펠탑:🗼|유럽,런던,스위스,이탈리아:🏰|미국,뉴욕:🗽|비행기,해외,세계일주,유학:✈️|여행,배낭:🧳`
+    .trim().split(/[|\n]/).map(s => s.trim()).filter(Boolean).map(s => {
+      const i = s.lastIndexOf(":"); return [s.slice(0, i).split(",").map(k => k.trim().toLowerCase()), s.slice(i + 1)];
+    });
+  const CUTE = ["🌈", "⭐", "🍀", "🌷", "🦋", "🌙", "🎈", "✨"];
+  const PICKS = ["✈️","🧳","🌊","🏝️","⛰️","🥾","🏕️","🚲","🌌","🌸","🍁","⛄","🍗","🍻","☕","🍰","🍜","🎤","🎬","🎨","📷","📚","💪","🎢","🎮","💌","🎉","🐶","🏡","💰","🌈","✨"];
+  function guessEmoji(title, seed = 0) {
+    const t = String(title || "").toLowerCase();
+    for (const [keys, e] of EMOJI_RULES) if (keys.some(k => k && t.includes(k))) return e;
+    return CUTE[Math.abs(seed) % CUTE.length];
+  }
+  const hash = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.codePointAt(0)) | 0; return Math.abs(h); };
+  const emojiOf = i => i.emoji || guessEmoji(i.title, hash(i.title));
+  // 항목마다 정해진 색·기울기 (매번 같은 모양으로 보이게 id로 정함)
+  const look = id => {
+    const n = Number(id) || 0;
+    return `--sc:var(--p${n % 8});--tc:var(--p${(n * 3 + 2) % 8});--tilt:${((n * 37) % 5 - 2) * 0.35}deg;--stilt:${((n * 53) % 7 - 3) * 2}deg;--tape:${((n * 29) % 5 - 2) * 2}deg`;
+  };
+
+  function pickerHtml(selected, suggested) {
+    const list = [suggested, ...PICKS.filter(e => e !== suggested)];
+    if (selected && !list.includes(selected)) list.unshift(selected);
+    return `<div class="picker" role="group" aria-label="스티커 고르기">${list.map(e =>
+      `<button type="button" data-emoji="${esc(e)}" aria-pressed="${e === selected}">${esc(e)}</button>`).join("")}</div>`;
   }
 
   /* ===== 상태 ===== */
@@ -274,7 +365,7 @@ textarea.input{resize:vertical;min-height:84px}
   let items = [], joins = [], comments = [];
   let loaded = false, loadError = "";
   let openId = null;            // 상세 시트에 열려 있는 항목
-  let editInfo = false, editReview = false, uploading = false;
+  let editInfo = false, editReview = false, uploading = "";   // uploading: "", "cover", "photo"
 
   const byId = id => items.find(i => i.id === id);
   const joinsOf = id => joins.filter(j => j.item_id === id);
@@ -321,6 +412,7 @@ textarea.input{resize:vertical;min-height:84px}
 
   /* ===== 목록 그리기 ===== */
   function render() {
+    $("#today").textContent = "📔 " + fmtDiary(new Date());
     $("#hello").innerHTML = me
       ? `<button type="button" id="nameBtn">${esc(me)}</button>님, 오늘은 어떤 꿈을 적어 볼까요?`
       : "친구들과 하고 싶은 일을 함께 적어요";
@@ -341,7 +433,7 @@ textarea.input{resize:vertical;min-height:84px}
     if (loadError) {
       status.innerHTML = `<div class="err">${esc(loadError)}<br><button class="btn small" type="button" id="retryBtn">다시 시도</button></div>`;
       if (!loaded) { list.innerHTML = ""; return; }
-    } else status.innerHTML = loaded ? "" : `<p class="empty">불러오는 중…</p>`;
+    } else status.innerHTML = loaded ? "" : `<p class="empty">일기장 펼치는 중…</p>`;
     if (!loaded) { list.innerHTML = ""; return; }
 
     let rows;
@@ -351,7 +443,7 @@ textarea.input{resize:vertical;min-height:84px}
 
     if (!rows.length) {
       list.innerHTML = `<li class="empty">${
-        tab === "todo" ? (live.length ? "<b>🎉</b>모두 이뤘어요! 새로운 꿈을 추가해 볼까요?" : "<b>✨</b>아직 버킷이 없어요.<br>아래 <strong>＋ 버킷 추가</strong>로 첫 번째 꿈을 적어 보세요.")
+        tab === "todo" ? (live.length ? "<b>🎉</b>모두 이뤘어요! 새로운 꿈을 적어 볼까요?" : "<b>📔</b>아직 빈 일기장이에요.<br>아래 <strong>✏️ 버킷 쓰기</strong>로 첫 번째 꿈을 적어 보세요.")
         : tab === "done" ? "<b>🌱</b>아직 달성한 버킷이 없어요.<br>하나씩 이뤄 봐요!"
         : "휴지통이 비어 있어요."}</li>`;
       return;
@@ -359,11 +451,18 @@ textarea.input{resize:vertical;min-height:84px}
     list.innerHTML = rows.map(cardHtml).join("");
   }
 
+  // 카드 왼쪽 그림: 인증 사진 > 붙인 사진 > 이모티콘 스티커
+  function artHtml(i) {
+    const pic = (i.done && i.photo_path) || i.cover_path;
+    if (pic) return `<button class="polaroid-mini" type="button" data-act="open" aria-label="${esc(i.title)} 자세히"><img src="${esc(photoUrl(pic))}" alt="" loading="lazy"><span class="em">${esc(emojiOf(i))}</span></button>`;
+    return `<button class="sticker" type="button" data-act="open" aria-label="${esc(i.title)} 자세히">${esc(emojiOf(i))}</button>`;
+  }
+
   function cardHtml(i) {
     const nJoin = joinsOf(i.id).length, nCmt = commentsOf(i.id).length;
     const meta = [
       `<span>${esc(i.author)}</span>`,
-      i.done ? `<span class="c-done">${esc(fmtDay(i.done_at))} 달성</span>` : "",
+      i.done ? `<span class="c-done">${esc(fmtDay(i.done_at))} 달성</span>` : `<span>${esc(fmtShort(i.created_at))}</span>`,
       nJoin ? `<span>🙋 ${nJoin}</span>` : "",
       nCmt ? `<span>💬 ${nCmt}</span>` : "",
       i.deleted_at ? `<span>${esc(i.deleted_by || "누군가")}님이 ${esc(fmtAgo(i.deleted_at))} 지움</span>` : "",
@@ -373,13 +472,11 @@ textarea.input{resize:vertical;min-height:84px}
         ${i.note ? `<span class="c-note">${esc(i.note)}</span>` : ""}
         <span class="c-meta">${meta}</span>
       </button>`;
-    if (i.deleted_at) {
-      return `<li class="card trash" data-id="${i.id}">${main}<button class="restore" type="button" data-act="restore">되살리기</button></li>`;
-    }
-    return `<li class="card${i.done ? " done" : ""}" data-id="${i.id}">
+    const head = `<li class="card${i.done ? " done" : ""}${i.deleted_at ? " trash" : ""}" data-id="${i.id}" style="${look(i.id)}"><span class="tape" aria-hidden="true"></span>${artHtml(i)}${main}`;
+    if (i.deleted_at) return `${head}<button class="restore" type="button" data-act="restore">되살리기</button></li>`;
+    return `${head}
+      ${i.done ? `<span class="stamp" aria-hidden="true">달성!</span>` : ""}
       <button class="check" type="button" data-act="check" aria-pressed="${i.done}" aria-label="${i.done ? "달성 취소" : "달성 표시"}"><i>${CHECK_SVG}</i></button>
-      ${main}
-      ${i.photo_path ? `<img class="thumb" src="${esc(photoUrl(i.photo_path))}" alt="" loading="lazy">` : ""}
     </li>`;
   }
 
@@ -388,13 +485,26 @@ textarea.input{resize:vertical;min-height:84px}
     const i = byId(openId);
     if (!i) { closeSheet(); return; }
     const deleted = !!i.deleted_at;
+    $("#detailSheet").setAttribute("style", look(i.id));
+
+    const file = act => `<input type="file" accept="image/*" data-act="${act}" hidden>`;
+    $("#dHero").innerHTML = `
+      <div class="hero">${uploading === "cover"
+        ? `<figure class="polaroid"><div class="photo-drop" style="margin:0;height:200px">사진 붙이는 중…</div></figure>`
+        : i.cover_path
+        ? `<figure class="polaroid"><span class="tape" aria-hidden="true"></span><a href="${esc(photoUrl(i.cover_path))}" target="_blank" rel="noopener"><img src="${esc(photoUrl(i.cover_path))}" alt="${esc(i.title)} 사진"></a><span class="em">${esc(emojiOf(i))}</span></figure>`
+        : `<span class="sticker" role="img" aria-label="스티커">${esc(emojiOf(i))}</span>`}</div>
+      ${deleted ? "" : `<div class="hero-actions">
+        <label class="btn small file-btn">📷 ${i.cover_path ? "사진 바꾸기" : "사진 붙이기"}${file("cover")}</label>
+        ${i.cover_path ? `<button class="btn small" type="button" data-act="uncover">사진 떼기</button>` : ""}
+      </div>`}`;
 
     if (!editInfo) {
       $("#dInfo").innerHTML = `
+        <p class="d-date">${esc(fmtDiary(i.created_at))} · ${esc(i.author)}</p>
         <h2>${esc(i.title)}</h2>
         ${i.note ? `<p class="d-note">${esc(i.note)}</p>` : ""}
-        <p class="d-meta"><span>${esc(i.author)}님이 ${esc(fmtShort(i.created_at))}에 적음</span>
-          ${deleted ? "" : `<button class="link" type="button" data-act="edit">수정</button>`}</p>`;
+        ${deleted ? "" : `<p class="d-meta"><button class="link" type="button" data-act="edit">✏️ 고치기 · 스티커 바꾸기</button></p>`}`;
     }
 
     const js = joinsOf(i.id), joined = js.some(j => j.name === me);
@@ -410,20 +520,20 @@ textarea.input{resize:vertical;min-height:84px}
         dDone.innerHTML = deleted ? `<p class="muted" style="margin:0">아직 달성하지 않은 버킷이에요.</p>`
           : `<button class="btn primary big" type="button" data-act="done">🎉 달성했어요!</button>`;
       } else {
-        const fileInput = `<input type="file" accept="image/*" data-act="photo" hidden>`;
         dDone.innerHTML = `
           <div class="done-box">
             <div class="done-head">
-              <span class="badge">✓ 달성</span>
+              <span class="badge">달성!</span>
               <label class="done-date">달성한 날 <input type="date" data-act="date" value="${esc(i.done_at || "")}" max="${today()}" ${deleted ? "disabled" : ""}></label>
               ${deleted ? "" : `<button class="link" type="button" data-act="undone">달성 취소</button>`}
             </div>
-            ${uploading ? `<div class="photo-drop">사진 올리는 중…</div>`
-              : i.photo_path ? `<a href="${esc(photoUrl(i.photo_path))}" target="_blank" rel="noopener"><img class="proof" src="${esc(photoUrl(i.photo_path))}" alt="인증 사진"></a>
-                  ${deleted ? "" : `<div class="photo-row"><label class="btn small file-btn">사진 바꾸기${fileInput}</label></div>`}`
-              : deleted ? "" : `<label class="photo-drop">📷 인증 사진 올리기${fileInput}</label>`}
+            ${uploading === "photo" ? `<div class="photo-drop">사진 올리는 중…</div>`
+              : i.photo_path ? `<figure class="polaroid"><span class="tape" aria-hidden="true"></span><a href="${esc(photoUrl(i.photo_path))}" target="_blank" rel="noopener"><img src="${esc(photoUrl(i.photo_path))}" alt="인증 사진"></a>
+                  <figcaption>${esc(fmtDay(i.done_at))} 인증!</figcaption></figure>
+                  ${deleted ? "" : `<div class="photo-row"><label class="btn small file-btn">사진 바꾸기${file("photo")}</label></div>`}`
+              : deleted ? "" : `<label class="photo-drop">📷 인증 사진 올리기${file("photo")}</label>`}
             ${i.done_note ? `<p class="review">${esc(i.done_note)}</p>` : ""}
-            ${deleted ? "" : `<div class="row" style="justify-content:flex-start"><button class="link" type="button" data-act="review">${i.done_note ? "후기 수정" : "✏️ 후기 남기기"}</button></div>`}
+            ${deleted ? "" : `<div class="row" style="justify-content:flex-start"><button class="link" type="button" data-act="review">${i.done_note ? "후기 고치기" : "✏️ 후기 남기기"}</button></div>`}
           </div>`;
       }
     }
@@ -443,10 +553,13 @@ textarea.input{resize:vertical;min-height:84px}
   }
 
   function infoForm(i) {
+    const cur = emojiOf(i);
     $("#dInfo").innerHTML = `
       <form id="infoForm">
         <label class="field"><span>하고 싶은 일</span><input class="input" name="ititle" maxlength="100" required value="${esc(i.title)}"></label>
         <label class="field"><span>설명</span><textarea class="input" name="inote" maxlength="1000">${esc(i.note || "")}</textarea></label>
+        <div class="field"><span>스티커</span>${pickerHtml(cur, guessEmoji(i.title, hash(i.title)))}</div>
+        <input type="hidden" name="iemoji" value="${esc(cur)}">
         <div class="row"><button class="btn small" type="button" data-act="cancel-edit">취소</button><button class="btn small primary" type="submit">저장</button></div>
       </form>`;
     $("#infoForm").elements.ititle.focus();
@@ -463,6 +576,33 @@ textarea.input{resize:vertical;min-height:84px}
     $("#reviewForm").elements.note.focus();
   }
 
+  /* ===== 버킷 쓰기: 스티커 추천 + 사진 ===== */
+  let addEmoji = "", addEmojiPicked = false, addCoverFile = null, addCoverUrl = "";
+  function renderAddPicker() {
+    const title = $("#addTitleInput").value;
+    const suggested = guessEmoji(title, hash(title));
+    if (!addEmojiPicked) addEmoji = suggested;
+    $("#addPicker").innerHTML = `
+      <div class="pick-top"><span class="sticker" style="--sc:var(--p2)">${esc(addEmoji)}</span>
+        <p class="hint">${addEmojiPicked ? "직접 고른 스티커예요." : "제목에 맞춰 골라 봤어요. 다른 걸 눌러 바꿀 수 있어요."}</p></div>
+      ${pickerHtml(addEmoji, suggested)}`;
+  }
+  function setAddCover(file) {
+    if (addCoverUrl) URL.revokeObjectURL(addCoverUrl);
+    addCoverFile = file; addCoverUrl = file ? URL.createObjectURL(file) : "";
+    $("#addCoverPreview").hidden = !file;
+    if (file) $("#addCoverPreview").src = addCoverUrl;
+    $("#addCoverClear").hidden = !file;
+    $("#addCoverLabel").textContent = file ? "📷 다른 사진" : "📷 사진 고르기";
+  }
+  $("#addTitleInput").addEventListener("input", renderAddPicker);
+  $("#addPicker").addEventListener("click", e => {
+    const b = e.target.closest("[data-emoji]"); if (!b) return;
+    addEmoji = b.dataset.emoji; addEmojiPicked = true; renderAddPicker();
+  });
+  $("#addCover").addEventListener("change", e => { if (e.target.files[0]) setAddCover(e.target.files[0]); e.target.value = ""; });
+  $("#addCoverClear").addEventListener("click", () => setAddCover(null));
+
   /* ===== 시트 ===== */
   let current = null;
   function openSheet(name, id) {
@@ -478,6 +618,7 @@ textarea.input{resize:vertical;min-height:84px}
       setTimeout(() => $("#nameInput").focus(), 50);
     } else if (name === "add") {
       $("#addForm").reset();
+      addEmojiPicked = false; setAddCover(null); renderAddPicker();
       setTimeout(() => $("#addTitleInput").focus(), 50);
     } else if (name === "detail") {
       openId = id; editInfo = false; editReview = false;
@@ -514,6 +655,15 @@ textarea.input{resize:vertical;min-height:84px}
   }
   async function restore(id, btn) {
     await busy(btn, () => save(setTrash(id, false), "되살렸어요"));
+  }
+
+  // 사진을 줄여서 올리고 저장소 안 경로를 돌려줌
+  async function uploadPhoto(itemId, file, kind) {
+    const blob = await shrink(file);
+    const path = `${itemId}/${kind}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+    const up = await sb.storage.from(PHOTO_BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: false });
+    if (up.error) throw up.error;
+    return path;
   }
 
   $("#tabs").addEventListener("click", e => {
@@ -559,12 +709,34 @@ textarea.input{resize:vertical;min-height:84px}
     e.preventDefault();
     const title = $("#addTitleInput").value.trim(), note = $("#addNoteInput").value.trim();
     if (!title) return;
-    const ok = await busy(e.submitter, () => save(sb.from("bucket_items").insert({ title, note: note || null, author: me }), "버킷을 추가했어요"));
-    if (ok) { closeSheet(); if (tab !== "todo") { tab = "todo"; store.set("bucket.tab", tab); render(); } window.scrollTo(0, 0); }
+    await busy(e.submitter, async () => {
+      const ins = await sb.from("bucket_items").insert({ title, note: note || null, author: me, emoji: addEmoji || guessEmoji(title, hash(title)) }).select("id").single();
+      if (ins.error) { toast("저장하지 못했어요. (" + ins.error.message + ")", 4500); return; }
+      let msg = "일기장에 붙였어요 " + addEmoji;
+      if (addCoverFile) {
+        try {
+          const path = await uploadPhoto(ins.data.id, addCoverFile, "cover");
+          const r = await sb.from("bucket_items").update({ cover_path: path }).eq("id", ins.data.id);
+          if (r.error) throw r.error;
+        } catch (err) { msg = "버킷은 붙였는데 사진은 올리지 못했어요. (" + (err.message || err) + ")"; }
+      }
+      toast(msg, 3500);
+      closeSheet();
+      if (tab !== "todo") { tab = "todo"; store.set("bucket.tab", tab); }
+      await load();
+      window.scrollTo(0, 0);
+    });
   });
 
   // 상세 시트 안의 버튼들
   $("#detailBody").addEventListener("click", async e => {
+    const pick = e.target.closest("#infoForm [data-emoji]");
+    if (pick) {
+      const f = $("#infoForm");
+      f.elements.iemoji.value = pick.dataset.emoji;
+      f.querySelectorAll("[data-emoji]").forEach(b => b.setAttribute("aria-pressed", b === pick));
+      return;
+    }
     const btn = e.target.closest("button[data-act]");
     if (!btn || openId == null) return;
     const i = byId(openId); if (!i) return;
@@ -576,6 +748,10 @@ textarea.input{resize:vertical;min-height:84px}
     else if (act === "done") markDone(i.id, btn);
     else if (act === "undone") markUndone(i.id, btn);
     else if (act === "restore") restore(i.id, btn);
+    else if (act === "uncover") {
+      if (!confirm("붙인 사진을 뗄까요?")) return;
+      await busy(btn, () => save(sb.from("bucket_items").update({ cover_path: null }).eq("id", i.id), "사진을 뗐어요"));
+    }
     else if (act === "trash") {
       if (!confirm(`'${i.title}'을(를) 휴지통으로 보낼까요?\n휴지통에서 언제든 되살릴 수 있어요.`)) return;
       if (needName()) return;
@@ -601,9 +777,9 @@ textarea.input{resize:vertical;min-height:84px}
     e.preventDefault();
     const f = e.target, i = byId(openId); if (!i) return;
     if (f.id === "infoForm") {
-      const title = f.elements.ititle.value.trim(), note = f.elements.inote.value.trim();
+      const title = f.elements.ititle.value.trim(), note = f.elements.inote.value.trim(), emoji = f.elements.iemoji.value;
       if (!title) return;
-      const ok = await busy(e.submitter, () => save(sb.from("bucket_items").update({ title, note: note || null }).eq("id", i.id), "고쳤어요"));
+      const ok = await busy(e.submitter, () => save(sb.from("bucket_items").update({ title, note: note || null, emoji: emoji || null }).eq("id", i.id), "고쳤어요"));
       if (ok) { editInfo = false; renderDetail(); }
     } else if (f.id === "reviewForm") {
       const note = f.elements.note.value.trim();
@@ -621,24 +797,23 @@ textarea.input{resize:vertical;min-height:84px}
   $("#detailBody").addEventListener("change", async e => {
     const el = e.target, i = byId(openId);
     if (!i || !el.dataset) return;
-    if (el.dataset.act === "date") {
+    const act = el.dataset.act;
+    if (act === "date") {
       if (!el.value) { el.value = i.done_at || ""; return; }
       await save(sb.from("bucket_items").update({ done_at: el.value }).eq("id", i.id), "달성한 날을 바꿨어요");
-    } else if (el.dataset.act === "photo" && el.files && el.files[0]) {
+    } else if ((act === "photo" || act === "cover") && el.files && el.files[0]) {
       if (needName()) return;
       const file = el.files[0];
-      uploading = true; renderDetail();
+      uploading = act; renderDetail();
       try {
-        const blob = await shrink(file);
-        const path = `${i.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
-        const up = await sb.storage.from(PHOTO_BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: false });
-        if (up.error) throw up.error;
-        uploading = false;
-        await save(sb.from("bucket_items").update({ photo_path: path }).eq("id", i.id), "📷 인증 사진을 올렸어요");
+        const path = await uploadPhoto(i.id, file, act);
+        uploading = "";
+        await save(sb.from("bucket_items").update(act === "cover" ? { cover_path: path } : { photo_path: path }).eq("id", i.id),
+          act === "cover" ? "📷 사진을 붙였어요" : "📷 인증 사진을 올렸어요");
       } catch (err) {
         toast("사진을 올리지 못했어요. (" + (err.message || err) + ")", 4500);
       } finally {
-        uploading = false;
+        uploading = "";
         if (openId != null) renderDetail();
       }
     }

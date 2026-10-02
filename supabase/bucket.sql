@@ -103,3 +103,8 @@ begin
 end $$;
 -- 삭제 이벤트에 item_id 가 실려 오도록
 alter table public.bucket_joins replica identity full;
+
+-- 7) 일기장 꾸미기: 항목마다 이모티콘 스티커와 붙인 사진 (2026-10-02 추가)
+alter table public.bucket_items add column if not exists emoji text check (char_length(emoji) <= 16);
+alter table public.bucket_items add column if not exists cover_path text check (char_length(cover_path) <= 300);
+grant update (emoji, cover_path) on public.bucket_items to anon, authenticated;
