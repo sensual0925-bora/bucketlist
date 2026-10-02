@@ -17,7 +17,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nanum+Pen+Script&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Montserrat:wght@500;600&family=Nanum+Pen+Script&display=swap">
 <style>
 :root{
   color-scheme:light dark;
@@ -27,6 +27,7 @@
   --accent:#D9573B; --accent-ink:#FFFFFF; --accent-soft:#FBE3DA;
   --done:#2F7D5B; --done-soft:#DDEFE5; --crit:#B3382A; --stamp:#D23A2A;
   --hl:#FFE98A;
+  --fab-bg:#2E2622; --fab-ink:#FFF8F0; --fab-hover:#8E5E3C; --fab-dot:#B07A52;
   --p0:#FFDCDC; --p1:#FFE6C9; --p2:#FFF3B8; --p3:#DAF2CF; --p4:#CFEDF3; --p5:#D7E1FF; --p6:#E6D9FF; --p7:#FFD9EC;
   --scrim:rgba(30,15,8,.42); --shadow:0 -10px 40px rgba(60,30,15,.18);
   --card-shadow:0 1px 2px rgba(80,50,30,.08),0 4px 14px rgba(80,50,30,.08);
@@ -41,6 +42,7 @@
     --accent:#F08A6E; --accent-ink:#2A0F06; --accent-soft:#45251C;
     --done:#6FCB9F; --done-soft:#1C3A2C; --crit:#EE8474; --stamp:#F0705E;
     --hl:#6B5A1E;
+    --fab-bg:#F2EAE0; --fab-ink:#2E2622; --fab-hover:#E3D3C0; --fab-dot:#B07A52;
     --p0:#5A3434; --p1:#5A4430; --p2:#57502C; --p3:#355233; --p4:#2E4D54; --p5:#343F63; --p6:#45385F; --p7:#583248;
     --scrim:rgba(0,0,0,.6); --shadow:0 -10px 40px rgba(0,0,0,.5);
     --card-shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.3);
@@ -119,7 +121,15 @@ h1{margin:0;font-family:var(--pen);font-weight:400;font-size:40px;line-height:1.
 .err button{margin-top:8px}
 
 /* 추가 버튼 */
-.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));height:54px;padding:0 28px;border-radius:27px;border:0;background:var(--accent);color:var(--accent-ink);font-size:20px;font-weight:700;box-shadow:0 6px 20px rgba(217,87,59,.35);z-index:10}
+/* 버킷 쓰기 버튼: 소소상점 느낌 (웜차콜 · 카멜 · 영문 라벨) */
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:10;height:56px;padding:0 26px 0 8px;border:0;border-radius:999px;background:var(--fab-bg);color:var(--fab-ink);display:flex;align-items:center;gap:12px;box-shadow:0 10px 28px rgba(46,38,34,.28),0 2px 6px rgba(46,38,34,.12);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;letter-spacing:-.01em;transition:background-color .2s ease,transform .2s ease}
+.fab:hover{background:var(--fab-hover)}
+.fab:active{transform:translateX(-50%) scale(.97)}
+.fab-plus{width:40px;height:40px;border-radius:50%;background:var(--fab-dot);display:grid;place-items:center;flex:none}
+.fab-plus svg{width:18px;height:18px}
+.fab-text{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
+.fab-text .eng{font-family:"Montserrat",sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;opacity:.6}
+.fab-text b{font-size:16px;font-weight:600}
 
 /* 공통 버튼 */
 .btn{height:44px;padding:0 18px;border-radius:12px;border:1.5px solid var(--rule-strong);background:var(--card);font-weight:700;font-size:17px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
@@ -181,6 +191,8 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .chip{background:var(--surface-2);border-radius:14px;padding:2px 12px;font-size:17px}
 .chip.me{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.name-chip{border:1.5px solid var(--rule-strong);background:var(--card);padding:6px 18px;font-size:19px;font-weight:700}
+.name-chip.me{border-color:var(--accent)}
 .muted{color:var(--ink-3)}
 .join-btn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
 .done-box{background:color-mix(in srgb,var(--done-soft) 85%,transparent);border-radius:10px;padding:14px}
@@ -240,16 +252,20 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
   <ul class="list" id="list"></ul>
 </main>
 
-<button class="fab" id="addBtn" type="button">✏️ 버킷 쓰기</button>
+<button class="fab" id="addBtn" type="button">
+  <span class="fab-plus" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" stroke="#FFF8F0" stroke-width="1.8" stroke-linecap="round"><path d="M9 3v12M3 9h12"/></svg></span>
+  <span class="fab-text"><span class="eng">New Bucket</span><b>버킷 쓰기</b></span>
+</button>
 
 <div class="scrim" id="scrim" hidden></div>
 
 <!-- 이름 -->
 <div class="sheet" id="nameSheet" role="dialog" aria-modal="true" aria-labelledby="nameTitle" hidden>
-  <div class="sheet-head"><h2 id="nameTitle">이름을 알려주세요</h2><button class="x" type="button" data-close id="nameClose">닫기</button></div>
+  <div class="sheet-head"><h2 id="nameTitle">누구신가요?</h2><button class="x" type="button" data-close id="nameClose">닫기</button></div>
   <form class="sheet-body" id="nameForm">
     <p class="hint">버킷을 쓰거나 댓글을 달 때 이 이름이 보여요. 이 기기에 기억해 둘게요.</p>
-    <label class="field"><span>이름 (친구들이 알아볼 수 있게)</span><input class="input" id="nameInput" maxlength="20" autocomplete="nickname" required></label>
+    <div id="nameChips"></div>
+    <label class="field"><span id="nameInputLabel">이름 (친구들이 알아볼 수 있게)</span><input class="input" id="nameInput" maxlength="20" autocomplete="nickname" required></label>
     <button class="btn primary big" type="submit">시작하기</button>
   </form>
 </div>
@@ -325,6 +341,11 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
     get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
     set(k, v) { try { localStorage.setItem(k, v); } catch {} },
   };
+  // 이름은 쿠키에도 저장 (카카오톡 안에서 열면 localStorage가 자주 지워져서)
+  const cookie = {
+    get(k) { const m = document.cookie.match(new RegExp("(?:^|; )" + k + "=([^;]*)")); try { return m ? decodeURIComponent(m[1]) : ""; } catch { return ""; } },
+    set(k, v) { document.cookie = `${k}=${encodeURIComponent(v)}; max-age=${60 * 60 * 24 * 400}; path=/; SameSite=Lax`; },
+  };
   const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13c2 1.5 3.5 3.5 5 6 3-6 7-11 12-15"/></svg>';
 
   function toast(msg, ms = 2600) {
@@ -376,7 +397,8 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
   }
 
   /* ===== 상태 ===== */
-  let me = store.get("bucket.name");
+  let me = store.get("bucket.name") || cookie.get("bucket_name");
+  if (me) { store.set("bucket.name", me); cookie.set("bucket_name", me); }
   let tab = ["todo", "done", "trash"].includes(store.get("bucket.tab")) ? store.get("bucket.tab") : "todo";
   let items = [], joins = [], comments = [];
   let loaded = false, loadError = "";
@@ -420,10 +442,32 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
     if (btn) btn.disabled = true;
     try { return await fn(); } finally { if (btn) btn.disabled = false; }
   }
-  function needName() {
+  // 글을 남길 때만 이름을 물어봄. 이름을 정하면 하던 화면으로 돌아감
+  let afterName = null;
+  function needName(then) {
     if (me) return false;
+    const back = openId;
+    afterName = then || (back != null ? () => openSheet("detail", back) : null);
     openSheet("name");
     return true;
+  }
+  function setName(v) {
+    me = v; store.set("bucket.name", v); cookie.set("bucket_name", v);
+    const then = afterName; afterName = null;
+    closeSheet(); render();
+    toast(`반가워요, ${v}님!`);
+    if (then) then();
+  }
+  // 지금까지 글을 남긴 이름들을 버튼으로 보여 줌 (많이 쓴 순)
+  function renderNameChips() {
+    const count = {};
+    [...items.map(i => i.author), ...joins.map(j => j.name), ...comments.map(c => c.author)]
+      .forEach(n => { if (n) count[n] = (count[n] || 0) + 1; });
+    const names = Object.keys(count).sort((a, b) => count[b] - count[a]).slice(0, 12);
+    $("#nameChips").innerHTML = names.length ? `
+      <div class="field"><span>이 중에 있나요? 눌러서 고르세요</span>
+        <div class="chips">${names.map(n => `<button type="button" class="chip name-chip${n === me ? " me" : ""}" data-name="${esc(n)}">${esc(n)}</button>`).join("")}</div></div>` : "";
+    $("#nameInputLabel").textContent = names.length ? "처음이라면 이름을 적어 주세요" : "이름 (친구들이 알아볼 수 있게)";
   }
 
   /* ===== 목록 그리기 ===== */
@@ -431,7 +475,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
     $("#today").textContent = "📔 " + fmtDiary(new Date());
     $("#hello").innerHTML = me
       ? `<button type="button" id="nameBtn">${esc(me)}</button>님, 오늘은 어떤 꿈을 적어 볼까요?`
-      : "친구들과 하고 싶은 일을 함께 적어요";
+      : `친구들과 하고 싶은 일을 함께 적어요 · <button type="button" id="nameBtn">내 이름 정하기</button>`;
     const live = items.filter(i => !i.deleted_at);
     const done = live.filter(i => i.done);
     const trash = items.filter(i => i.deleted_at);
@@ -630,8 +674,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
     document.body.style.overflow = "hidden";
     if (name === "name") {
       $("#nameInput").value = me;
-      $("#nameClose").hidden = !me;          // 이름이 없으면 닫을 수 없음
-      setTimeout(() => $("#nameInput").focus(), 50);
+      renderNameChips();
     } else if (name === "add") {
       $("#addForm").reset();
       addEmojiPicked = false; setAddCover(null); renderAddPicker();
@@ -645,10 +688,10 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
   }
   function closeSheet() {
     if (!current) return;
-    if (current === "name" && !me) return;
     $("#" + current + "Sheet").hidden = true;
     $("#scrim").hidden = true;
     document.body.style.overflow = "";
+    if (current === "name") afterName = null;
     if (current === "detail") { openId = null; editInfo = editReview = false; }
     current = null;
   }
@@ -710,15 +753,17 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
     catch { prompt("이 링크를 복사해서 친구에게 보내 주세요", url); }
   });
 
-  $("#addBtn").addEventListener("click", () => { if (!needName()) openSheet("add"); });
+  $("#addBtn").addEventListener("click", () => { if (!needName(() => openSheet("add"))) openSheet("add"); });
 
   $("#nameForm").addEventListener("submit", e => {
     e.preventDefault();
     const v = $("#nameInput").value.trim();
     if (!v) return;
-    me = v; store.set("bucket.name", v);
-    closeSheet(); render();
-    toast(`반가워요, ${v}님!`);
+    setName(v);
+  });
+  $("#nameChips").addEventListener("click", e => {
+    const b = e.target.closest("[data-name]");
+    if (b) setName(b.dataset.name);
   });
 
   $("#addForm").addEventListener("submit", async e => {
@@ -858,7 +903,6 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.45}
   /* ===== 시작 ===== */
   render();
   load();
-  if (!me) openSheet("name");
   if (sb) {
     // 친구가 바꾼 내용이 바로 보이도록
     const ch = sb.channel("bucket-all");
