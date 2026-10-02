@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>우리들의 버킷리스트</title>
+<meta name="description" content="친구들과 함께 쓰는 버킷리스트">
+<meta name="theme-color" content="#D9573B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="버킷리스트">
+<meta property="og:title" content="우리들의 버킷리스트">
+<meta property="og:description" content="하고 싶은 일, 같이 적고 같이 해요">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#FBF6F1; --surface:#FFFFFF; --surface-2:#F3EAE2; --ink:#2A1F1A; --ink-2:#6B5A51; --ink-3:#9A8A81;
+  --rule:#EADFD6; --rule-strong:#D5C6BA;
+  --accent:#D9573B; --accent-ink:#FFFFFF; --accent-soft:#FBE3DA;
+  --done:#2F7D5B; --done-soft:#DDEFE5; --crit:#B3382A;
+  --scrim:rgba(30,15,8,.42); --shadow:0 -10px 40px rgba(60,30,15,.18);
+  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#16110F; --surface:#211A17; --surface-2:#2C2320; --ink:#F2E9E4; --ink-2:#BCAAA0; --ink-3:#8C7B72;
+    --rule:#352B27; --rule-strong:#4A3D37;
+    --accent:#F08A6E; --accent-ink:#2A0F06; --accent-soft:#45251C;
+    --done:#6FCB9F; --done-soft:#1C3A2C; --crit:#EE8474;
+    --scrim:rgba(0,0,0,.6); --shadow:0 -10px 40px rgba(0,0,0,.5);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.5}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+.wrap{max-width:640px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px));padding-top:calc(22px + env(safe-area-inset-top,0px));padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+
+/* 상단 */
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.02em}
+.hello{margin:4px 0 0;color:var(--ink-2);font-size:14px}
+.hello button{border:0;background:none;padding:0;color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.invite{flex:none;height:40px;padding:0 14px;border-radius:20px;border:1px solid var(--rule-strong);background:var(--surface);font-size:14px;font-weight:600}
+
+.progress{margin:18px 0 0;background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:14px 16px}
+.progress-line{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;color:var(--ink-2)}
+.progress-line b{font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
+.bar{margin-top:10px;height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.bar > i{display:block;height:100%;width:0;background:var(--done);border-radius:4px;transition:width .4s ease}
+
+/* 탭 */
+.tabs{display:flex;gap:6px;margin:18px 0 12px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;height:38px;padding:0 14px;border-radius:19px;border:1px solid var(--rule);background:var(--surface);color:var(--ink-2);font-size:14px;font-weight:500}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.tab .n{margin-left:4px;font-variant-numeric:tabular-nums;opacity:.75}
+
+/* 목록 */
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.card{display:flex;align-items:flex-start;gap:4px;background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:6px 10px 6px 4px}
+.check{flex:none;width:44px;height:44px;display:grid;place-items:center;border:0;background:none;padding:0}
+.check i{width:26px;height:26px;border-radius:50%;border:2px solid var(--rule-strong);display:grid;place-items:center;transition:background .15s,border-color .15s}
+.check svg{width:16px;height:16px;opacity:0}
+.card.done .check i{background:var(--done);border-color:var(--done)}
+.card.done .check svg{opacity:1;color:var(--surface)}
+.card-main{flex:1;min-width:0;border:0;background:none;padding:10px 4px 8px;text-align:left;display:block}
+.card-main > span{display:block}
+.c-title{font-size:16px;font-weight:600;word-break:break-word}
+.card.done .c-title{color:var(--ink-2)}
+.c-note{margin-top:2px;color:var(--ink-2);font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.c-meta{margin-top:6px;display:flex!important;flex-wrap:wrap;gap:4px 10px;color:var(--ink-3);font-size:13px}
+.c-done{color:var(--done);font-weight:600}
+.thumb{flex:none;width:64px;height:64px;margin:8px 0 8px 4px;border-radius:10px;object-fit:cover;background:var(--surface-2)}
+.restore{flex:none;align-self:center;height:36px;padding:0 12px;border-radius:18px;border:1px solid var(--rule-strong);background:var(--surface);font-size:13px;font-weight:600}
+.card.trash{padding-left:14px}
+
+.empty{text-align:center;color:var(--ink-3);padding:48px 16px;font-size:15px}
+.empty b{display:block;font-size:34px;margin-bottom:6px}
+.err{background:var(--accent-soft);color:var(--ink);border-radius:12px;padding:14px 16px;font-size:14px}
+.err button{margin-top:8px}
+
+/* 추가 버튼 */
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));height:52px;padding:0 26px;border-radius:26px;border:0;background:var(--accent);color:var(--accent-ink);font-size:16px;font-weight:700;box-shadow:0 6px 20px rgba(217,87,59,.35);z-index:10}
+
+/* 공통 버튼 */
+.btn{height:44px;padding:0 18px;border-radius:12px;border:1px solid var(--rule-strong);background:var(--surface);font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.big{width:100%;height:52px;font-size:16px;border-radius:14px}
+.btn.small{height:36px;padding:0 12px;font-size:14px;border-radius:10px}
+.link{border:0;background:none;padding:4px 0;color:var(--ink-2);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.link.danger{color:var(--crit)}
+
+/* 시트 */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:20}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--surface);border-radius:18px 18px 0 0;max-height:92dvh;display:flex;flex-direction:column;box-shadow:var(--shadow);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (min-width:700px){
+  .sheet{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:540px;border-radius:16px;max-height:88vh}
+}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 4px;flex:none}
+.sheet-head h2{margin:0;font-size:18px}
+.x{border:0;background:none;color:var(--ink-2);font-size:15px;height:40px;padding:0 4px}
+.sheet-body{overflow-y:auto;padding:8px 16px 20px;overscroll-behavior:contain}
+.field{display:block;margin:0 0 14px}
+.field > span{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.input{width:100%;border:1px solid var(--rule-strong);background:var(--bg);border-radius:12px;padding:12px 14px;font-size:16px}
+textarea.input{resize:vertical;min-height:84px}
+.hint{font-size:13px;color:var(--ink-3);margin:-6px 0 14px}
+@media (prefers-reduced-motion: no-preference){
+  .sheet{animation:up .2s ease-out}
+  @media (min-width:700px){ .sheet{animation:none} }
+}
+@keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+
+/* 상세 */
+#dInfo h2{margin:0;font-size:21px;line-height:1.35;word-break:break-word}
+.d-note{margin:8px 0 0;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
+.d-meta{margin:10px 0 0;color:var(--ink-3);font-size:13px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.d-meta .link{font-size:13px}
+.d-sec{margin-top:18px;padding-top:16px;border-top:1px solid var(--rule)}
+.d-sec h3{margin:0 0 10px;font-size:14px;color:var(--ink-2);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{background:var(--surface-2);border-radius:14px;padding:4px 11px;font-size:14px}
+.chip.me{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.muted{color:var(--ink-3);font-size:14px}
+.join-btn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.done-box{background:var(--done-soft);border-radius:14px;padding:14px}
+.done-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.badge{background:var(--done);color:var(--surface);border-radius:8px;padding:3px 9px;font-size:13px;font-weight:700}
+.done-date{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink-2)}
+.done-date input{border:1px solid var(--rule-strong);background:var(--surface);border-radius:8px;padding:4px 8px;font-size:15px}
+.done-head .link{margin-left:auto}
+.proof{display:block;width:100%;max-height:420px;object-fit:cover;border-radius:12px;margin-top:12px;background:var(--surface-2)}
+.photo-drop{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;height:96px;border:2px dashed var(--rule-strong);border-radius:12px;background:var(--surface);color:var(--ink-2);font-weight:600;cursor:pointer}
+.photo-row{margin-top:8px;display:flex;justify-content:flex-end}
+.file-btn{cursor:pointer}
+.review{margin:12px 0 0;white-space:pre-wrap;word-break:break-word}
+.review-form{margin-top:12px}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.cmts{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:12px}
+.cmt-top{display:flex;gap:8px;align-items:baseline;font-size:13px;color:var(--ink-3)}
+.cmt-top b{color:var(--ink);font-size:14px}
+.cmt-top .link{margin-left:auto;font-size:12px;padding:0}
+.cmt p{margin:2px 0 0;white-space:pre-wrap;word-break:break-word}
+.cmt-form{display:flex;gap:8px}
+.cmt-form .input{flex:1;min-width:0;padding:10px 12px}
+.trash-note{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+
+.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:40;font-size:14px;max-width:calc(100% - 32px);text-align:center}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <div>
+      <h1>우리들의 버킷리스트</h1>
+      <p class="hello" id="hello"></p>
+    </div>
+    <button class="invite" id="inviteBtn" type="button">친구 초대</button>
+  </div>
+
+  <div class="progress" id="progress" hidden>
+    <div class="progress-line"><span>함께 이룬 꿈</span><span><b id="doneCount">0</b> / <span id="allCount">0</span>개</span></div>
+    <div class="bar"><i id="barFill"></i></div>
+  </div>
+
+  <div class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-tab="todo">도전 중<span class="n" id="nTodo"></span></button>
+    <button class="tab" role="tab" data-tab="done">달성<span class="n" id="nDone"></span></button>
+    <button class="tab" role="tab" data-tab="trash">휴지통<span class="n" id="nTrash"></span></button>
+  </div>
+
+  <div id="status"></div>
+  <ul class="list" id="list"></ul>
+</main>
+
+<button class="fab" id="addBtn" type="button">＋ 버킷 추가</button>
+
+<div class="scrim" id="scrim" hidden></div>
+
+<!-- 이름 -->
+<div class="sheet" id="nameSheet" role="dialog" aria-modal="true" aria-labelledby="nameTitle" hidden>
+  <div class="sheet-head"><h2 id="nameTitle">이름을 알려주세요</h2><button class="x" type="button" data-close id="nameClose">닫기</button></div>
+  <form class="sheet-body" id="nameForm">
+    <p class="hint" style="margin:0 0 14px">버킷을 추가하거나 댓글을 달 때 이 이름이 보여요. 이 기기에 기억해 둘게요.</p>
+    <label class="field"><span>이름 (친구들이 알아볼 수 있게)</span><input class="input" id="nameInput" maxlength="20" autocomplete="nickname" required></label>
+    <button class="btn primary big" type="submit">시작하기</button>
+  </form>
+</div>
+
+<!-- 추가 -->
+<div class="sheet" id="addSheet" role="dialog" aria-modal="true" aria-labelledby="addTitle" hidden>
+  <div class="sheet-head"><h2 id="addTitle">버킷 추가</h2><button class="x" type="button" data-close>닫기</button></div>
+  <form class="sheet-body" id="addForm">
+    <label class="field"><span>하고 싶은 일</span><input class="input" id="addTitleInput" maxlength="100" placeholder="예) 제주도 한 바퀴 자전거 여행" required></label>
+    <label class="field"><span>설명 (선택)</span><textarea class="input" id="addNoteInput" maxlength="1000" placeholder="언제, 누구랑, 왜 하고 싶은지"></textarea></label>
+    <button class="btn primary big" type="submit">추가하기</button>
+  </form>
+</div>
+
+<!-- 상세 -->
+<div class="sheet" id="detailSheet" role="dialog" aria-modal="true" aria-label="버킷 자세히" hidden>
+  <div class="sheet-head"><span></span><button class="x" type="button" data-close>닫기</button></div>
+  <div class="sheet-body" id="detailBody">
+    <section id="dInfo"></section>
+    <section class="d-sec" id="dJoin"></section>
+    <section class="d-sec" id="dDone"></section>
+    <section class="d-sec">
+      <h3>댓글 <span id="dCmtCount"></span></h3>
+      <ul class="cmts" id="dComments"></ul>
+      <form class="cmt-form" id="cmtForm">
+        <input class="input" id="cmtInput" maxlength="500" placeholder="댓글 달기" autocomplete="off" aria-label="댓글">
+        <button class="btn primary" type="submit">등록</button>
+      </form>
+    </section>
+    <section class="d-sec" id="dFoot"></section>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+<script>
+(() => {
+  /* ===== Supabase 설정 ===== */
+  // publishable 키는 웹페이지에 넣어 쓰도록 만든 공개용 키 (secret 키는 절대 넣지 말 것)
+  const SUPABASE_URL = "https://pxbbwatboylajmxeqnqd.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_fiefZveGsfljQqJH5CJ5Pw_CgmKiaT2";
+  const PHOTO_BUCKET = "bucket-photos";
+  const PHOTO_MAX = 1600;  // 인증 사진은 긴 변을 이 크기로 줄여서 올림 (무료 저장 용량 1GB 아끼기)
+  const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const pad = n => String(n).padStart(2, "0");
+  const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+  const fmtDay = s => { if (!s) return ""; const [y, m, d] = s.slice(0, 10).split("-"); return `${y}.${m}.${d}`; };
+  const fmtShort = iso => { const d = new Date(iso); return isNaN(d) ? "" : `${d.getMonth()+1}월 ${d.getDate()}일`; };
+  const fmtAgo = iso => {
+    const d = new Date(iso), s = (Date.now() - d) / 1000;
+    if (isNaN(d)) return "";
+    if (s < 60) return "방금";
+    if (s < 3600) return `${Math.floor(s / 60)}분 전`;
+    if (s < 86400) return `${Math.floor(s / 3600)}시간 전`;
+    if (s < 86400 * 7) return `${Math.floor(s / 86400)}일 전`;
+    return fmtShort(iso);
+  };
+  const photoUrl = p => `${SUPABASE_URL}/storage/v1/object/public/${PHOTO_BUCKET}/${p.split("/").map(encodeURIComponent).join("/")}`;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const CHECK_SVG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
+
+  function toast(msg, ms = 2600) {
+    const t = $("#toast"); t.textContent = msg; t.hidden = false;
+    clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, ms);
+  }
+
+  /* ===== 상태 ===== */
+  let me = store.get("bucket.name");
+  let tab = ["todo", "done", "trash"].includes(store.get("bucket.tab")) ? store.get("bucket.tab") : "todo";
+  let items = [], joins = [], comments = [];
+  let loaded = false, loadError = "";
+  let openId = null;            // 상세 시트에 열려 있는 항목
+  let editInfo = false, editReview = false, uploading = false;
+
+  const byId = id => items.find(i => i.id === id);
+  const joinsOf = id => joins.filter(j => j.item_id === id);
+  const commentsOf = id => comments.filter(c => c.item_id === id);
+
+  /* ===== 불러오기 ===== */
+  let loadSeq = 0;
+  async function load() {
+    if (!sb) { loadError = "Supabase 연결 파일을 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요."; render(); return; }
+    const seq = ++loadSeq;
+    const [a, b, c] = await Promise.all([
+      sb.from("bucket_items").select("*").order("created_at", { ascending: false }),
+      sb.from("bucket_joins").select("*").order("created_at"),
+      sb.from("bucket_comments").select("*").is("deleted_at", null).order("created_at"),
+    ]);
+    if (seq !== loadSeq) return;  // 더 최근 요청이 있으면 그 결과를 씀
+    const err = a.error || b.error || c.error;
+    if (err) { loadError = "목록을 불러오지 못했어요. (" + err.message + ")"; render(); return; }
+    items = a.data; joins = b.data; comments = c.data;
+    loaded = true; loadError = "";
+    render();
+    if (openId != null) renderDetail();
+  }
+  let loadTimer = null;
+  const loadSoon = () => { clearTimeout(loadTimer); loadTimer = setTimeout(load, 300); };
+
+  // 저장 공통: 실패하면 알리고, 성공하면 다시 불러옴
+  async function save(query, okMsg) {
+    const { error } = await query;
+    if (error) { toast("저장하지 못했어요. (" + error.message + ")", 4500); return false; }
+    if (okMsg) toast(okMsg);
+    await load();
+    return true;
+  }
+  async function busy(btn, fn) {
+    if (btn) btn.disabled = true;
+    try { return await fn(); } finally { if (btn) btn.disabled = false; }
+  }
+  function needName() {
+    if (me) return false;
+    openSheet("name");
+    return true;
+  }
+
+  /* ===== 목록 그리기 ===== */
+  function render() {
+    $("#hello").innerHTML = me
+      ? `<button type="button" id="nameBtn">${esc(me)}</button>님, 오늘은 어떤 꿈을 적어 볼까요?`
+      : "친구들과 하고 싶은 일을 함께 적어요";
+    const live = items.filter(i => !i.deleted_at);
+    const done = live.filter(i => i.done);
+    const trash = items.filter(i => i.deleted_at);
+    $("#progress").hidden = !loaded || !live.length;
+    $("#doneCount").textContent = done.length;
+    $("#allCount").textContent = live.length;
+    $("#barFill").style.width = live.length ? (done.length / live.length * 100) + "%" : "0";
+    $("#nTodo").textContent = loaded ? live.length - done.length : "";
+    $("#nDone").textContent = loaded ? done.length : "";
+    $("#nTrash").textContent = loaded && trash.length ? trash.length : "";
+    document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === tab));
+    $("#addBtn").hidden = tab === "trash";
+
+    const status = $("#status"), list = $("#list");
+    if (loadError) {
+      status.innerHTML = `<div class="err">${esc(loadError)}<br><button class="btn small" type="button" id="retryBtn">다시 시도</button></div>`;
+      if (!loaded) { list.innerHTML = ""; return; }
+    } else status.innerHTML = loaded ? "" : `<p class="empty">불러오는 중…</p>`;
+    if (!loaded) { list.innerHTML = ""; return; }
+
+    let rows;
+    if (tab === "todo") rows = live.filter(i => !i.done);
+    else if (tab === "done") rows = done.slice().sort((x, y) => (y.done_at || "").localeCompare(x.done_at || "") || y.created_at.localeCompare(x.created_at));
+    else rows = trash.slice().sort((x, y) => y.deleted_at.localeCompare(x.deleted_at));
+
+    if (!rows.length) {
+      list.innerHTML = `<li class="empty">${
+        tab === "todo" ? (live.length ? "<b>🎉</b>모두 이뤘어요! 새로운 꿈을 추가해 볼까요?" : "<b>✨</b>아직 버킷이 없어요.<br>아래 <strong>＋ 버킷 추가</strong>로 첫 번째 꿈을 적어 보세요.")
+        : tab === "done" ? "<b>🌱</b>아직 달성한 버킷이 없어요.<br>하나씩 이뤄 봐요!"
+        : "휴지통이 비어 있어요."}</li>`;
+      return;
+    }
+    list.innerHTML = rows.map(cardHtml).join("");
+  }
+
+  function cardHtml(i) {
+    const nJoin = joinsOf(i.id).length, nCmt = commentsOf(i.id).length;
+    const meta = [
+      `<span>${esc(i.author)}</span>`,
+      i.done ? `<span class="c-done">${esc(fmtDay(i.done_at))} 달성</span>` : "",
+      nJoin ? `<span>🙋 ${nJoin}</span>` : "",
+      nCmt ? `<span>💬 ${nCmt}</span>` : "",
+      i.deleted_at ? `<span>${esc(i.deleted_by || "누군가")}님이 ${esc(fmtAgo(i.deleted_at))} 지움</span>` : "",
+    ].join("");
+    const main = `<button class="card-main" type="button" data-act="open">
+        <span class="c-title">${esc(i.title)}</span>
+        ${i.note ? `<span class="c-note">${esc(i.note)}</span>` : ""}
+        <span class="c-meta">${meta}</span>
+      </button>`;
+    if (i.deleted_at) {
+      return `<li class="card trash" data-id="${i.id}">${main}<button class="restore" type="button" data-act="restore">되살리기</button></li>`;
+    }
+    return `<li class="card${i.done ? " done" : ""}" data-id="${i.id}">
+      <button class="check" type="button" data-act="check" aria-pressed="${i.done}" aria-label="${i.done ? "달성 취소" : "달성 표시"}"><i>${CHECK_SVG}</i></button>
+      ${main}
+      ${i.photo_path ? `<img class="thumb" src="${esc(photoUrl(i.photo_path))}" alt="" loading="lazy">` : ""}
+    </li>`;
+  }
+
+  /* ===== 상세 그리기 ===== */
+  function renderDetail() {
+    const i = byId(openId);
+    if (!i) { closeSheet(); return; }
+    const deleted = !!i.deleted_at;
+
+    if (!editInfo) {
+      $("#dInfo").innerHTML = `
+        <h2>${esc(i.title)}</h2>
+        ${i.note ? `<p class="d-note">${esc(i.note)}</p>` : ""}
+        <p class="d-meta"><span>${esc(i.author)}님이 ${esc(fmtShort(i.created_at))}에 적음</span>
+          ${deleted ? "" : `<button class="link" type="button" data-act="edit">수정</button>`}</p>`;
+    }
+
+    const js = joinsOf(i.id), joined = js.some(j => j.name === me);
+    $("#dJoin").innerHTML = `
+      <h3>함께하고 싶은 사람 ${js.length ? js.length + "명" : ""}</h3>
+      ${js.length ? `<div class="chips">${js.map(j => `<span class="chip${j.name === me ? " me" : ""}">${esc(j.name)}</span>`).join("")}</div>`
+                  : `<p class="muted" style="margin:0 0 12px">아직 없어요. 같이 하고 싶다면 손을 들어 주세요!</p>`}
+      ${deleted ? "" : `<button class="btn join-btn${joined ? " on" : ""}" type="button" data-act="join">${joined ? "✓ 나도 함께해요 (취소하기)" : "🙋 나도 할래"}</button>`}`;
+
+    if (!editReview) {
+      const dDone = $("#dDone");
+      if (!i.done) {
+        dDone.innerHTML = deleted ? `<p class="muted" style="margin:0">아직 달성하지 않은 버킷이에요.</p>`
+          : `<button class="btn primary big" type="button" data-act="done">🎉 달성했어요!</button>`;
+      } else {
+        const fileInput = `<input type="file" accept="image/*" data-act="photo" hidden>`;
+        dDone.innerHTML = `
+          <div class="done-box">
+            <div class="done-head">
+              <span class="badge">✓ 달성</span>
+              <label class="done-date">달성한 날 <input type="date" data-act="date" value="${esc(i.done_at || "")}" max="${today()}" ${deleted ? "disabled" : ""}></label>
+              ${deleted ? "" : `<button class="link" type="button" data-act="undone">달성 취소</button>`}
+            </div>
+            ${uploading ? `<div class="photo-drop">사진 올리는 중…</div>`
+              : i.photo_path ? `<a href="${esc(photoUrl(i.photo_path))}" target="_blank" rel="noopener"><img class="proof" src="${esc(photoUrl(i.photo_path))}" alt="인증 사진"></a>
+                  ${deleted ? "" : `<div class="photo-row"><label class="btn small file-btn">사진 바꾸기${fileInput}</label></div>`}`
+              : deleted ? "" : `<label class="photo-drop">📷 인증 사진 올리기${fileInput}</label>`}
+            ${i.done_note ? `<p class="review">${esc(i.done_note)}</p>` : ""}
+            ${deleted ? "" : `<div class="row" style="justify-content:flex-start"><button class="link" type="button" data-act="review">${i.done_note ? "후기 수정" : "✏️ 후기 남기기"}</button></div>`}
+          </div>`;
+      }
+    }
+
+    const cs = commentsOf(i.id);
+    $("#dCmtCount").textContent = cs.length ? cs.length : "";
+    $("#dComments").innerHTML = cs.length ? cs.map(c => `
+      <li class="cmt" data-cid="${c.id}">
+        <div class="cmt-top"><b>${esc(c.author)}</b><span>${esc(fmtAgo(c.created_at))}</span>
+          ${c.author === me ? `<button class="link" type="button" data-act="delcmt">삭제</button>` : ""}</div>
+        <p>${esc(c.body)}</p>
+      </li>`).join("") : `<li class="muted">첫 댓글을 남겨 보세요.</li>`;
+
+    $("#dFoot").innerHTML = deleted
+      ? `<div class="trash-note"><span>휴지통에 있는 버킷이에요.</span><button class="btn small" type="button" data-act="restore">되살리기</button></div>`
+      : `<button class="link danger" type="button" data-act="trash">휴지통으로 보내기</button>`;
+  }
+
+  function infoForm(i) {
+    $("#dInfo").innerHTML = `
+      <form id="infoForm">
+        <label class="field"><span>하고 싶은 일</span><input class="input" name="ititle" maxlength="100" required value="${esc(i.title)}"></label>
+        <label class="field"><span>설명</span><textarea class="input" name="inote" maxlength="1000">${esc(i.note || "")}</textarea></label>
+        <div class="row"><button class="btn small" type="button" data-act="cancel-edit">취소</button><button class="btn small primary" type="submit">저장</button></div>
+      </form>`;
+    $("#infoForm").elements.ititle.focus();
+  }
+  function reviewForm(i) {
+    $("#dDone").querySelector(".done-box").insertAdjacentHTML("beforeend", `
+      <form class="review-form" id="reviewForm">
+        <textarea class="input" name="note" maxlength="1000" placeholder="해 보니 어땠나요?">${esc(i.done_note || "")}</textarea>
+        <div class="row"><button class="btn small" type="button" data-act="cancel-review">취소</button><button class="btn small primary" type="submit">저장</button></div>
+      </form>`);
+    const box = $("#dDone"), old = box.querySelector(".review"), btnRow = box.querySelector("[data-act=review]");
+    if (old) old.hidden = true;
+    if (btnRow) btnRow.parentElement.hidden = true;
+    $("#reviewForm").elements.note.focus();
+  }
+
+  /* ===== 시트 ===== */
+  let current = null;
+  function openSheet(name, id) {
+    if (current === "detail" && name !== "detail") { openId = null; editInfo = editReview = false; }
+    if (current) $("#" + current + "Sheet").hidden = true;
+    current = name;
+    $("#scrim").hidden = false;
+    $("#" + name + "Sheet").hidden = false;
+    document.body.style.overflow = "hidden";
+    if (name === "name") {
+      $("#nameInput").value = me;
+      $("#nameClose").hidden = !me;          // 이름이 없으면 닫을 수 없음
+      setTimeout(() => $("#nameInput").focus(), 50);
+    } else if (name === "add") {
+      $("#addForm").reset();
+      setTimeout(() => $("#addTitleInput").focus(), 50);
+    } else if (name === "detail") {
+      openId = id; editInfo = false; editReview = false;
+      $("#cmtInput").value = "";
+      renderDetail();
+      $("#detailBody").scrollTop = 0;
+    }
+  }
+  function closeSheet() {
+    if (!current) return;
+    if (current === "name" && !me) return;
+    $("#" + current + "Sheet").hidden = true;
+    $("#scrim").hidden = true;
+    document.body.style.overflow = "";
+    if (current === "detail") { openId = null; editInfo = editReview = false; }
+    current = null;
+  }
+  $("#scrim").addEventListener("click", closeSheet);
+  document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", closeSheet));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+
+  /* ===== 동작 ===== */
+  const setDone = (id, done) => sb.from("bucket_items").update(done ? { done: true, done_at: today() } : { done: false, done_at: null }).eq("id", id);
+  const setTrash = (id, on) => sb.from("bucket_items").update(on ? { deleted_at: new Date().toISOString(), deleted_by: me } : { deleted_at: null, deleted_by: null }).eq("id", id);
+
+  async function markDone(id, btn) {
+    if (needName()) return;
+    const ok = await busy(btn, () => save(setDone(id, true)));
+    if (ok) { toast("🎉 축하해요! 인증 사진과 후기를 남겨 보세요", 3500); openSheet("detail", id); }
+  }
+  async function markUndone(id, btn) {
+    if (!confirm("달성 표시를 취소할까요?\n(사진과 후기는 그대로 남아요)")) return;
+    await busy(btn, () => save(setDone(id, false), "도전 중으로 옮겼어요"));
+  }
+  async function restore(id, btn) {
+    await busy(btn, () => save(setTrash(id, false), "되살렸어요"));
+  }
+
+  $("#tabs").addEventListener("click", e => {
+    const t = e.target.closest(".tab"); if (!t) return;
+    tab = t.dataset.tab; store.set("bucket.tab", tab); render(); window.scrollTo(0, 0);
+  });
+
+  $("#list").addEventListener("click", e => {
+    const btn = e.target.closest("[data-act]"), card = e.target.closest(".card");
+    if (!btn || !card) return;
+    const id = Number(card.dataset.id), i = byId(id);
+    if (!i) return;
+    if (btn.dataset.act === "open") openSheet("detail", id);
+    else if (btn.dataset.act === "check") i.done ? markUndone(id, btn) : markDone(id, btn);
+    else if (btn.dataset.act === "restore") restore(id, btn);
+  });
+
+  document.addEventListener("click", e => {
+    if (e.target.closest("#nameBtn")) openSheet("name");
+    if (e.target.closest("#retryBtn")) { loadError = ""; render(); load(); }
+  });
+
+  $("#inviteBtn").addEventListener("click", async () => {
+    const url = location.href.split("#")[0].split("?")[0];
+    const data = { title: "우리들의 버킷리스트", text: "같이 하고 싶은 일, 여기에 적어 줘!", url };
+    if (navigator.share) { try { await navigator.share(data); return; } catch (err) { if (err.name === "AbortError") return; } }
+    try { await navigator.clipboard.writeText(url); toast("링크를 복사했어요. 친구에게 보내 주세요!"); }
+    catch { prompt("이 링크를 복사해서 친구에게 보내 주세요", url); }
+  });
+
+  $("#addBtn").addEventListener("click", () => { if (!needName()) openSheet("add"); });
+
+  $("#nameForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const v = $("#nameInput").value.trim();
+    if (!v) return;
+    me = v; store.set("bucket.name", v);
+    closeSheet(); render();
+    toast(`반가워요, ${v}님!`);
+  });
+
+  $("#addForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const title = $("#addTitleInput").value.trim(), note = $("#addNoteInput").value.trim();
+    if (!title) return;
+    const ok = await busy(e.submitter, () => save(sb.from("bucket_items").insert({ title, note: note || null, author: me }), "버킷을 추가했어요"));
+    if (ok) { closeSheet(); if (tab !== "todo") { tab = "todo"; store.set("bucket.tab", tab); render(); } window.scrollTo(0, 0); }
+  });
+
+  // 상세 시트 안의 버튼들
+  $("#detailBody").addEventListener("click", async e => {
+    const btn = e.target.closest("button[data-act]");
+    if (!btn || openId == null) return;
+    const i = byId(openId); if (!i) return;
+    const act = btn.dataset.act;
+    if (act === "edit") { editInfo = true; infoForm(i); }
+    else if (act === "cancel-edit") { editInfo = false; renderDetail(); }
+    else if (act === "review") { editReview = true; reviewForm(i); }
+    else if (act === "cancel-review") { editReview = false; renderDetail(); }
+    else if (act === "done") markDone(i.id, btn);
+    else if (act === "undone") markUndone(i.id, btn);
+    else if (act === "restore") restore(i.id, btn);
+    else if (act === "trash") {
+      if (!confirm(`'${i.title}'을(를) 휴지통으로 보낼까요?\n휴지통에서 언제든 되살릴 수 있어요.`)) return;
+      if (needName()) return;
+      const ok = await busy(btn, () => save(setTrash(i.id, true), "휴지통으로 보냈어요"));
+      if (ok) closeSheet();
+    }
+    else if (act === "join") {
+      if (needName()) return;
+      const joined = joinsOf(i.id).some(j => j.name === me);
+      await busy(btn, () => save(joined
+        ? sb.from("bucket_joins").delete().eq("item_id", i.id).eq("name", me)
+        : sb.from("bucket_joins").insert({ item_id: i.id, name: me }),
+        joined ? "함께하기를 취소했어요" : "🙋 함께하기로 했어요!"));
+    }
+    else if (act === "delcmt") {
+      const cid = Number(btn.closest("[data-cid]").dataset.cid);
+      if (!confirm("이 댓글을 지울까요?")) return;
+      await busy(btn, () => save(sb.from("bucket_comments").update({ deleted_at: new Date().toISOString() }).eq("id", cid), "댓글을 지웠어요"));
+    }
+  });
+
+  $("#detailBody").addEventListener("submit", async e => {
+    e.preventDefault();
+    const f = e.target, i = byId(openId); if (!i) return;
+    if (f.id === "infoForm") {
+      const title = f.elements.ititle.value.trim(), note = f.elements.inote.value.trim();
+      if (!title) return;
+      const ok = await busy(e.submitter, () => save(sb.from("bucket_items").update({ title, note: note || null }).eq("id", i.id), "고쳤어요"));
+      if (ok) { editInfo = false; renderDetail(); }
+    } else if (f.id === "reviewForm") {
+      const note = f.elements.note.value.trim();
+      const ok = await busy(e.submitter, () => save(sb.from("bucket_items").update({ done_note: note || null }).eq("id", i.id), "후기를 저장했어요"));
+      if (ok) { editReview = false; renderDetail(); }
+    } else if (f.id === "cmtForm") {
+      if (needName()) return;
+      const body = $("#cmtInput").value.trim();
+      if (!body) return;
+      const ok = await busy(e.submitter, () => save(sb.from("bucket_comments").insert({ item_id: i.id, author: me, body })));
+      if (ok) { $("#cmtInput").value = ""; const b = $("#detailBody"); b.scrollTop = b.scrollHeight; }
+    }
+  });
+
+  $("#detailBody").addEventListener("change", async e => {
+    const el = e.target, i = byId(openId);
+    if (!i || !el.dataset) return;
+    if (el.dataset.act === "date") {
+      if (!el.value) { el.value = i.done_at || ""; return; }
+      await save(sb.from("bucket_items").update({ done_at: el.value }).eq("id", i.id), "달성한 날을 바꿨어요");
+    } else if (el.dataset.act === "photo" && el.files && el.files[0]) {
+      if (needName()) return;
+      const file = el.files[0];
+      uploading = true; renderDetail();
+      try {
+        const blob = await shrink(file);
+        const path = `${i.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+        const up = await sb.storage.from(PHOTO_BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: false });
+        if (up.error) throw up.error;
+        uploading = false;
+        await save(sb.from("bucket_items").update({ photo_path: path }).eq("id", i.id), "📷 인증 사진을 올렸어요");
+      } catch (err) {
+        toast("사진을 올리지 못했어요. (" + (err.message || err) + ")", 4500);
+      } finally {
+        uploading = false;
+        if (openId != null) renderDetail();
+      }
+    }
+  });
+
+  // 사진 줄이기: 긴 변 PHOTO_MAX px, JPEG
+  async function shrink(file) {
+    let src;
+    try { src = await createImageBitmap(file, { imageOrientation: "from-image" }); }
+    catch {
+      src = await new Promise((res, rej) => {
+        const img = new Image(); img.onload = () => res(img);
+        img.onerror = () => rej(new Error("이미지를 읽을 수 없어요"));
+        img.src = URL.createObjectURL(file);
+      });
+    }
+    const w = src.width, h = src.height, k = Math.min(1, PHOTO_MAX / Math.max(w, h));
+    const c = document.createElement("canvas");
+    c.width = Math.round(w * k); c.height = Math.round(h * k);
+    c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+    const blob = await new Promise(res => c.toBlob(res, "image/jpeg", 0.85));
+    if (!blob) throw new Error("이미지를 변환할 수 없어요");
+    return blob;
+  }
+
+  /* ===== 시작 ===== */
+  render();
+  load();
+  if (!me) openSheet("name");
+  if (sb) {
+    // 친구가 바꾼 내용이 바로 보이도록
+    const ch = sb.channel("bucket-all");
+    ["bucket_items", "bucket_joins", "bucket_comments"].forEach(table =>
+      ch.on("postgres_changes", { event: "*", schema: "public", table }, loadSoon));
+    ch.subscribe();
+  }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) loadSoon(); });
+})();
+</script>
+</body>
+</html>
